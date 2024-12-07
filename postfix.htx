@@ -1,0 +1,20 @@
+</textarea>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>
+  var hljs = remark.highlighter.engine;
+</script>
+<script src="https://remarkjs.com/remark.language.js"></script>
+<script>
+  var slideshow = remark.create({
+      timer: {
+        enabled: false
+      },
+      highlightStyle: 'monokai',
+      highlightLanguage: 'remark',
+      highlightLines: true,
+      highlightSpans: true
+    }) ;
+</script>
+</body>
+</html>

@@ -16,10 +16,5 @@ import module java.desktop;
 
 // https://www.redpill-linpro.com/techblog/2024/02/21/java-21-shell-scripts.html
 void main() {
-    JFileChooser jfc= new JFileChooser();
-    JDialog parent = new JDialog();
-    parent.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    jfc.showOpenDialog(parent);
-    System.out.println(jfc.getSelectedFile());
-    System.exit(0);
+    System.out.println("Hello, World!");
 }
