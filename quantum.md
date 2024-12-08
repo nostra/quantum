@@ -10,6 +10,7 @@ class: center, middle, inverse
 Made with: https://github.com/gnab/remark
 
 Inspired by https://www.redpill-linpro.com/techblog/2024/02/21/java-21-shell-scripts.html
+
 ---
 layout: false
 # Agenda
@@ -18,23 +19,43 @@ layout: false
 - ... using modern java constructions
 
 ---
+# When is this useful?
+
+Shell scripts are used to perform and organize simple tasks. 
+
+- Bash scripts quickly get **untenable**.
+- You can get type safety and other **niceness** when using Java
+- Example: Load **test data into database**
+  - Instead of a disabled junit test that loads a database with example data, you
+    can create a script which has better transparency, and also **easier to document**
+- When you do not want or need a full-blown jar application
+- Distribution and **documentation** is easy
+
+---
 # Hello world
 
+This is the modern version of hello world in java:
 ```shell
 cat > /tmp/hello <<EOF
 void main() {
     System.out.println("Hello, World!");
 }
 EOF
+```
+
+Need preview flag to enable implicitly declared classes
+
+You can run the code without a compilation step, like this:
+```shell
 java --source 23 --enable-preview /tmp/hello
 ```
 
-- Nifty to be able to run java directly from the command line
-- Need preview flag to enable implicitly declared classes
+We **want to run it directly**, without the "java" command prefix
+
 ---
 # Hello world as a shell script
 
-Add a shebang to make the java code into a shell script
+Add a shebang to make the java code into a **shell script**
 
 ```shell
 cat > /tmp/hello <<EOF
@@ -47,7 +68,7 @@ chmod a+x /tmp/hello
 /tmp/hello
 ```
 
-- More versatile to run it as a shell script
+- More versatile
 - Need to make file executable, of course
 - The triple slash gets normalized upon execution
 ---
@@ -74,8 +95,14 @@ chmod a+x /tmp/hello
 - if exceptions are thrown, code continues to be executed
 - too lax with regards to errors
 
+Why not fat jar?
+- You do not want to distribute the jar
+- You want transparency in regard to script content
+- Skip the explicit build step
+- Do not need a lot of functionality
+
 ---
-# More advanced usage
+# Module import for dependencies
 
 - Using module import for simplicity
 - This script could reside anywhere, but I put
@@ -92,8 +119,8 @@ cp ./src/main/java/jshellrun.java /tmp/jshellrun
 # What if you need packages
 
 - This shows how you can depend on, and use packages as dependencies
-- ... but you might want to consider going for a fat jar instead
-- Note that with a single maven dependency, you typically get a lot of transitive dependencies
+- ... but you might want to consider going for a **fat jar** instead
+- Note that with a single maven dependency, you typically get a lot of **transitive dependencies**
 
 ```shell
 mvn -q exec:exec -Dexec.executable=echo -Dexec.args="%classpath"
@@ -103,14 +130,6 @@ You will use it like this:
 CLASSPATH=$(mvn -q exec:exec -Dexec.executable=echo -Dexec.args="%classpath") \
   ./src/main/java/pods.java
 ```
-
----
-# When is this useful?
-
-- Bash scripts quickly get untenable.
-- You can get type safety and other niceness when using Java 
-- Instead of a disabled junit test that loads a database with example data, you 
-  can create a script which has better transparency, and also easier to document
 
 ---
 layout: true
