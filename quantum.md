@@ -4,7 +4,7 @@ class: center, middle, inverse
 ---
 # Java as shell script
 
-.footnote[xx.12.2024 Erlend Nossum]
+.footnote[18.12.2024 Erlend Nossum]
 ???
 
 Made with: https://github.com/gnab/remark
@@ -95,7 +95,7 @@ chmod a+x /tmp/hello
 - if exceptions are thrown, code continues to be executed
 - too lax with regards to errors
 
-Why not fat jar?
+**Why not fat jar?**
 - You do not want to distribute the jar
 - You want transparency in regard to script content
 - Skip the explicit build step
