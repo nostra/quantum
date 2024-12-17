@@ -108,11 +108,11 @@ chmod a+x /tmp/hello
 - This script could reside anywhere, but I put
   it in a source root to get it checked by compiler
 ```shell
-./src/main/java/jshellrun.java
+./src/main/java/filechooserrun.java
 ```
 - Case in point:
 ```shell
-cp ./src/main/java/jshellrun.java /tmp/jshellrun
+cp ./src/main/java/filechooserrun.java /tmp/jshellrun
 /tmp/jshellrun
 ```
 ---

@@ -4,6 +4,7 @@ On Ubuntu, remember to update to correct java version:
 
 ```shell
 sudo alternatives --config java
+sudo alternatives --config javac
 ```
 
 Create presentation with make:
@@ -19,7 +20,7 @@ src/main/java/helloworld.java
 
 Import module example:
 ```shell
-src/main/java/jshellrun.java
+src/main/java/filechooserrun.java
 ```
 
 
