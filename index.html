@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="keywords" content="presentation" />
+    <meta name="description" content="stb" />
+    <title>Nossum presenterer...</title>
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Lato:300,400,900%7CPT+Sans+Narrow:400,700);
+
+      body {
+        font-family: 'Lato';
+      }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      li p { line-height: 1.25em; }
+      .red { color: #fa0000; }
+      .large { font-size: 2em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-code-line-highlighted     { background-color: #373832; }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+      #slideshow .slide .content code {
+        font-size: 0.8em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+      }
+      .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+      }
+      .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+      }
+
+      /* Slide-specific styling */
+      #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+      }
+      #slide-how .slides {
+        font-size: 0.9em;
+        position: absolute;
+        top:  151px;
+        right: 140px;
+      }
+      #slide-how .slides h3 {
+        margin-top: 0.2em;
+      }
+      #slide-how .slides .first, #slide-how .slides .second {
+        padding: 1px 20px;
+        height: 90px;
+        width: 120px;
+        -moz-box-shadow: 0 0 10px #777;
+        -webkit-box-shadow: 0 0 10px #777;
+        box-shadow: 0 0 10px #777;
+      }
+      #slide-how .slides .first {
+        background: #fff;
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        z-index: 1;
+      }
+      #slide-how .slides .second {
+        position: relative;
+        background: #fff;
+        z-index: 0;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+        .left-column h2:last-of-type, .left-column h3:last-child {
+          color: #000;
+        }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
+      img[alt=gitops] { float: right; width: 250px}
+      img[alt=gitopsimage] { float: right; width: 250px}
+      img[alt=liveness] { float: right; }
+      img[alt=JudgeGavel] { float: right; }
+      img[alt=logformat] { float: right; }
+      img[alt=metrics] { float: right; width: 250px; }
+      img[alt=service-mesh] { float: right; width: 450px; }
+      img[alt=vault-secret] { float: right; width: 350px; }
+      img[alt=mesh] { float: right; width: 350px; }
+      img[alt=stackdrivermonitoring] { width: 700px; }
+      img[alt=ping] { width: 700px; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+# Java as shell script
+
+.footnote[18.12.2024 Erlend Nossum]
+???
+
+Made with: https://github.com/gnab/remark
+
+Inspired by https://www.redpill-linpro.com/techblog/2024/02/21/java-21-shell-scripts.html
+
+---
+layout: false
+# Agenda
+
+- Run java as shell script
+- ... using modern java constructions
+
+---
+# When is this useful?
+
+Shell scripts are used to perform and organize simple tasks. 
+
+- Bash scripts quickly get **untenable**.
+- You can get type safety and other **niceness** when using Java
+- Example: Load **test data into database**
+  - Instead of a disabled junit test that loads a database with example data, you
+    can create a script which has better transparency, and also **easier to document**
+- When you do not want or need a full-blown jar application
+- Distribution and **documentation** is easy
+
+---
+# Hello world
+
+This is the modern version of hello world in java:
+```shell
+cat > /tmp/hello <<EOF
+void main() {
+    System.out.println("Hello, World!");
+}
+EOF
+```
+
+Need preview flag to enable implicitly declared classes
+
+You can run the code without a compilation step, like this:
+```shell
+java --source 23 --enable-preview /tmp/hello
+```
+
+We **want to run it directly**, without the "java" command prefix
+
+---
+# Hello world as a shell script
+
+Add a shebang to make the java code into a **shell script**
+
+```shell
+cat > /tmp/hello <<EOF
+///usr/bin/env java --source 23 --enable-preview "\$0" "\$@"; exit \$?
+void main() {
+    System.out.println("Hello, World!");
+}
+EOF
+chmod a+x /tmp/hello
+/tmp/hello
+```
+
+- More versatile
+- Need to make file executable, of course
+- The triple slash gets normalized upon execution
+---
+# If not yet on modern java version
+
+What if you want to run this on legacy java version?
+```shell
+cat > /tmp/hello <<EOF
+///usr/bin/env java --source 11 "\$0" "\$@"; exit \$?
+public class HelloSnippet {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+EOF
+chmod a+x /tmp/hello
+/tmp/hello
+```
+
+---
+# Why not jshell
+
+- exit code is always 0
+- if exceptions are thrown, code continues to be executed
+- too lax with regards to errors
+
+**Why not fat jar?**
+- You do not want to distribute the jar
+- You want transparency in regard to script content
+- Skip the explicit build step
+- Do not need a lot of functionality
+
+---
+# Module import for dependencies
+
+- Using module import for simplicity
+- This script could reside anywhere, but I put
+  it in a source root to get it checked by compiler
+```shell
+./src/main/java/filechooserrun.java
+```
+- Case in point:
+```shell
+cp ./src/main/java/filechooserrun.java /tmp/jshellrun
+/tmp/jshellrun
+```
+---
+# What if you need packages
+
+- This shows how you can depend on, and use packages as dependencies
+- ... but you might want to consider going for a **fat jar** instead
+- Note that with a single maven dependency, you typically get a lot of **transitive dependencies**
+
+```shell
+mvn -q exec:exec -Dexec.executable=echo -Dexec.args="%classpath"
+```
+You will use it like this:
+```shell
+CLASSPATH=$(mvn -q exec:exec -Dexec.executable=echo -Dexec.args="%classpath") \
+  ./src/main/java/pods.java
+```
+
+---
+layout: true
+class: center, middle, inverse
+---
+# Questions?</textarea>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>
+  var hljs = remark.highlighter.engine;
+</script>
+<script src="https://remarkjs.com/remark.language.js"></script>
+<script>
+  var slideshow = remark.create({
+      timer: {
+        enabled: false
+      },
+      highlightStyle: 'monokai',
+      highlightLanguage: 'remark',
+      highlightLines: true,
+      highlightSpans: true
+    }) ;
+</script>
+</body>
+</html>
