@@ -1,0 +1,25 @@
+name: Build gh-pages
+# Ref: https://github.com/marketplace/actions/deploy-to-github-pages
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install and Build 
+        run: |
+          make
+          mkdir build
+          mv quantum.html build/index.html
+          
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.6.1
+        with:
+          folder: build # The folder the action should deploy.
